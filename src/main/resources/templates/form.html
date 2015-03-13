@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello Spring Boot!</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+
+    <!-- boilerplate for getting requirejs configured for webjars -->
+    <script src="/webjarsjs"></script>
+
+    <script data-main="js/form"
+            src="http://cdn.jsdelivr.net/webjars/requirejs/2.1.16/require.js"
+            th:src="@{/webjars/requirejs/2.1.16/require.js}"></script>
+</head>
+<body>
+    <p>Hello Spring Boot!</p>
+    <div>Payment form comes here.</div>
+</body>
+</html>
