@@ -1,3 +1,3 @@
-require(['./common'], function (common) {
+require(['./main'], function (main) {
     require(['app/form']);
 });
