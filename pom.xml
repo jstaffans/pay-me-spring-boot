@@ -58,6 +58,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.darrinholst</groupId>
+            <artifactId>sass-java</artifactId>
+            <version>3.4.4</version>
+        </dependency>
 	</dependencies>
 
 	<build>

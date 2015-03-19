@@ -1,3 +1,6 @@
 .idea 
 *.iml
+.sass-cache
+*.css
+*.css.map
 target
