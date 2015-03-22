@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.darrinholst</groupId>
             <artifactId>sass-java</artifactId>
-            <version>3.4.4</version>
+            <version>3.4.4.3</version>
         </dependency>
 	</dependencies>
 
@@ -84,22 +84,27 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- path to optimizer json config file(s) -->
                     <configFile>
-                        ${basedir}/src/main/config/buildconfig.js
+                        ${basedir}/src/main/config/build.js
                     </configFile>
-
-                    <!-- Whether or not to process configFile with maven filters. -->
-                    <filterConfig>
-                        false
-                    </filterConfig>
-                    <!-- Skip requirejs optimization if true -->
-                    <skip>
-                        false
-                    </skip>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.darrinholst</groupId>
+                <artifactId>sass-java-maven-plugin</artifactId>
+                <version>3.4.4.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <config>${basedir}/src/main/webapp/WEB-INF/sass/prod-config.rb</config>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 		</plugins>
 	</build>
-
 </project>

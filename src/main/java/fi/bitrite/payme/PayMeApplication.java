@@ -20,6 +20,7 @@ public class PayMeApplication {
     public FilterRegistrationBean sassFilter() {
         FilterRegistrationBean filterBean = new FilterRegistrationBean();
         Map<String, String> initParams = new HashMap<>();
+        initParams.put("configLocation", "WEB-INF/sass/dev-config.rb");
         initParams.put("onlyRunWhenKey", "RUNTIME_ENVIRONMENT");
         initParams.put("onlyRunWhenValue", "development");
         SassCompilingFilter filter = new SassCompilingFilter();
