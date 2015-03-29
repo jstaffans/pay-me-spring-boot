@@ -4,13 +4,11 @@
     <title>pay-me-spring-boot</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <link href="http://cdn.jsdelivr.net/webjars/normalize.css/3.0.2/normalize.css"
+    <link href="http://cdn.jsdelivr.net/normalize/3.0.2/normalize.min.css"
           th:href="@{/webjars/normalize.css/3.0.2/normalize.css}" rel="stylesheet" media="screen" />
 
-    <link href="/css/main.css" rel="stylesheet" media="screen" />
-
-    <!-- boilerplate for getting requirejs configured for webjars -->
-    <script src="/webjarsjs"></script>
+    <!-- Allow static prototyping by linking directly to css file -->
+    <link href="../css/main.css" th:href="@{/css/main.css}" rel="stylesheet" media="screen" />
 
     <script data-main="js/form"
             src="http://cdn.jsdelivr.net/webjars/requirejs/2.1.16/require.min.js"

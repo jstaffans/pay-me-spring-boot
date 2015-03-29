@@ -7,7 +7,7 @@
  * (although we have a special Compass production config that already takes care of that).
  */
 ({
-    appDir: '../webapp',
+    appDir: '../resources/public',
     baseUrl: 'js',
     paths: {
         app: 'app',
@@ -16,7 +16,6 @@
         jquery: 'empty:'
     },
 
-    // output directory - Spring Boot serves files under "public" automatically
     dir: '../../../target/classes/public',
 
     // each module will result in one concatenated file
