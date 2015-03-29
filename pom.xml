@@ -32,8 +32,8 @@
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.2.0</version>
+            <artifactId>normalize.css</artifactId>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>

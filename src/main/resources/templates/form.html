@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html class="payment" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Hello Spring Boot!</title>
+    <title>pay-me-spring-boot</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-    <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
-          th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+    <link href="http://cdn.jsdelivr.net/webjars/normalize.css/3.0.2/normalize.css"
+          th:href="@{/webjars/normalize.css/3.0.2/normalize.css}" rel="stylesheet" media="screen" />
+
+    <link href="/css/main.css" rel="stylesheet" media="screen" />
 
     <!-- boilerplate for getting requirejs configured for webjars -->
     <script src="/webjarsjs"></script>
@@ -15,7 +17,14 @@
             th:src="@{/webjars/requirejs/2.1.16/require.min.js}"></script>
 </head>
 <body>
-    <p>Hello Spring Boot!</p>
-    <div>Payment form comes here.</div>
+    <h2>Welcome to the Acme bank</h2>
+    <h3>Why don't you go right ahead and enter your credit card number here and we'll charge a random amount:</h3>
+    <div class="payment-form">
+        <form id="pay-form" name="pay-form" method="POST" action="/pay">
+            <input type="text" id="number" />
+            <a class="pay-button" id="pay-button">Pay!</a>
+        </form>
+        <div class="loader">Loading</div>
+    </div>
 </body>
 </html>
