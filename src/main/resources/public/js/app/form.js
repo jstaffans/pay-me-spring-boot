@@ -1,7 +1,4 @@
 define(function (require) {
-    var $ = require('jquery'),
-        util = require('app/utils/util');
+    var $ = require('jquery');
 
-    console.log("Form app");
-    console.log("Util:", util.getValue());
 });
