@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html class="payment" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>pay-me-spring-boot</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+        <link href="http://cdn.jsdelivr.net/normalize/3.0.2/normalize.min.css"
+              th:href="@{/webjars/normalize.css/3.0.2/normalize.css}" rel="stylesheet" media="screen" />
+
+        <!-- Allow static prototyping by linking directly to css file -->
+        <link href="../css/main.css" th:href="@{/css/main.css}" rel="stylesheet" media="screen" />
+
+        <script data-main="js/pay"
+                src="http://cdn.jsdelivr.net/webjars/requirejs/2.1.16/require.min.js"
+                th:src="@{/webjars/requirejs/2.1.16/require.min.js}"></script>
+    </head>
+    <body>
+        <h2 th:text="${'Result: ' + result}"></h2>
+    </body>
+</html>
