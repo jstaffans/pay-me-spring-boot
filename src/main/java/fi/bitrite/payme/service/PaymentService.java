@@ -20,9 +20,10 @@ public class PaymentService {
         Observable<String> payment = getSum()
                 .flatMap(this::processPayment)
                 .timeout(3, TimeUnit.SECONDS)
-                .cache()
-                .onErrorReturn(t -> "timeout");
+                .onErrorReturn(t -> "timeout")
+                .cache();
 
+        // subscribe a reporting service
         payment.subscribe(result -> log.info("Service result: {} for cc number {}", result, ccNumber));
 
         return payment;
