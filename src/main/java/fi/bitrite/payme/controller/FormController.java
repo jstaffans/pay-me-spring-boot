@@ -23,11 +23,9 @@ public class FormController {
 
     @RequestMapping(value = "/pay", method = RequestMethod.POST)
     String pay(@RequestParam("number") final String ccNumber, Model model) {
-        paymentService.doPayment(ccNumber).subscribe(result -> {
-            log.info("Result: {}", result);
-            model.addAttribute("result", result);
-        });
-
+        String result = paymentService.doPayment(ccNumber).toBlocking().first();
+        log.info("Result: {}", result);
+        model.addAttribute("result", result);
         return "pay";
     }
 }
