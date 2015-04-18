@@ -1,50 +1,51 @@
 package fi.bitrite.payme.service;
 
+import fi.bitrite.payme.model.Payment;
+import fi.bitrite.payme.model.PaymentResult;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rx.Observable;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import static net.javacrumbs.futureconverter.java8rx.FutureConverter.toObservable;
-
-/**
- * Author: johannes.
- */
 @Service
 @Slf4j
 public class PaymentService {
 
-    public Observable<String> doPayment(String ccNumber) {
-        Observable<String> payment = getSum()
-                .flatMap(this::processPayment)
-                .timeout(3, TimeUnit.SECONDS)
-                .onErrorReturn(t -> "timeout")
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    PaymentProcessor paymentProcessor = (payment) -> {
+        Thread.sleep(Math.round(Math.random() * 5000.0));
+        log.info("Charging: {}", payment);
+        return PaymentResult.OK(payment);
+    };
+
+    @Autowired
+    private ReportingService reportingService;
+
+    public Observable<PaymentResult> doPayment(String ccNumber) {
+        Double sum = Math.round(Math.random() * 500000.0) / 100.0;
+
+        Payment payment = new Payment(ccNumber, sum);
+        Observable<PaymentResult> result = processPayment(payment)
                 .cache();
 
         // subscribe a reporting service
-        payment.subscribe(result -> log.info("Service result: {} for cc number {}", result, ccNumber));
+        result.subscribe(res -> log.info("Payment processed: {}", res));
 
-        return payment;
+        return result;
     }
 
-    // Simulates an unreliable payment provider that takes up to five seconds to complete a payment.
-    private Observable<String> processPayment(Double sum) {
-        CompletableFuture<String> f = CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(Math.round(Math.random() * 5000.0));
-                log.info("Charging {}", sum);
-                return "ok";
-            } catch (InterruptedException e) {
-                return "interrupted";
-            }
-        });
+    private Observable<PaymentResult> processPayment(Payment payment) {
+        Future<PaymentResult> task = executorService.submit(() -> paymentProcessor.process(payment));
 
-        return toObservable(f);
+        try {
+            return Observable.just(task.get(3, TimeUnit.SECONDS));
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            task.cancel(true);
+            return Observable.just(PaymentResult.FAILED(payment));
+        }
     }
 
-    public Observable<Double> getSum() {
-        return Observable.just(Math.round(Math.random() * 500000.0) / 100.0);
-    }
 }
