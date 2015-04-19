@@ -6,6 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rx.Observable;
+import rx.Subscription;
+import rx.subjects.PublishSubject;
+import rx.subjects.SerializedSubject;
+import rx.subjects.Subject;
 
 import java.util.concurrent.*;
 
@@ -14,6 +18,8 @@ import java.util.concurrent.*;
 public class PaymentService {
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    private final Subject<PaymentResult, PaymentResult> eventBus = new SerializedSubject<>(PublishSubject.create());
 
     PaymentProcessor paymentProcessor = (payment) -> {
         Thread.sleep(Math.round(Math.random() * 5000.0));
@@ -26,26 +32,53 @@ public class PaymentService {
 
     public Observable<PaymentResult> doPayment(String ccNumber) {
         Double sum = Math.round(Math.random() * 500000.0) / 100.0;
-
         Payment payment = new Payment(ccNumber, sum);
-        Observable<PaymentResult> result = processPayment(payment)
+        Observable<PaymentResult> result = processPaymentCompletableFuture(payment)
+                .timeout(3000, TimeUnit.SECONDS, Observable.just(PaymentResult.FAILED(payment)))
                 .cache();
 
-        // subscribe a reporting service
-        result.subscribe(res -> log.info("Payment processed: {}", res));
+        result.subscribe(eventBus::onNext);
 
         return result;
     }
 
-    private Observable<PaymentResult> processPayment(Payment payment) {
+    private Observable<PaymentResult> processPaymentCompletableFuture(Payment payment) {
         Future<PaymentResult> task = executorService.submit(() -> paymentProcessor.process(payment));
 
-        try {
-            return Observable.just(task.get(3, TimeUnit.SECONDS));
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            task.cancel(true);
-            return Observable.just(PaymentResult.FAILED(payment));
-        }
+        return Observable.create(subscriber -> {
+            subscriber.add(new Subscription() {
+                private boolean unsubscribed = false;
+
+                @Override
+                public void unsubscribe() {
+                    if (!task.isDone()) {
+                        task.cancel(true);
+                    }
+
+                    unsubscribed = true;
+                }
+
+                @Override
+                public boolean isUnsubscribed() {
+                    return unsubscribed;
+                }
+            });
+
+            try {
+                PaymentResult value = task.get();
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onNext(value);
+                    subscriber.onCompleted();
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                if (!subscriber.isUnsubscribed()) {
+                    subscriber.onError(e);
+                }
+            }
+        });
     }
 
+    public Observable<PaymentResult> getEventBus() {
+        return eventBus;
+    }
 }

@@ -1,10 +1,12 @@
 package fi.bitrite.payme.service;
 
-import fi.bitrite.payme.model.Payment;
+import fi.bitrite.payme.model.PaymentResult;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Author: johannes.
@@ -12,6 +14,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Service
 public class ReportingService {
 
-    private List<Payment> payments = new CopyOnWriteArrayList<>();
+    @Autowired
+    PaymentService paymentService;
 
+    private List<PaymentResult> payments = new ArrayList<>();
+
+    @PostConstruct
+    private void registerPaymentResultSubscriber() {
+        paymentService.getEventBus().subscribe(paymentResult -> {
+            payments.add(paymentResult);
+        });
+    }
+
+    public List<PaymentResult> getPayments() {
+        return payments;
+    }
 }
