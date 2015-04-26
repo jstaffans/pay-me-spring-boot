@@ -24,8 +24,15 @@
 
         {
             name: 'form',
-            include: ['app/utils/util', 'app/form'],
+            include: ['app/form'],
+            exclude: ['main']
+        },
+
+        {
+            name: 'pay',
+            include: ['app/pay'],
             exclude: ['main']
         }
+
     ]
 })
