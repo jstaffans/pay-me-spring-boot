@@ -51,17 +51,13 @@
     }
 }
 
-.events {
+table.events {
     width: 800px;
     margin: 30px auto;
-
-    table {
-        width: 100%;
-        font-family: monospace;
-        font-size: 16px;
-        text-align: center;
-        color: #555;
-    }
+    font-family: monospace;
+    font-size: 16px;
+    text-align: center;
+    color: #555;
 
     th {
         margin-top: 20px;

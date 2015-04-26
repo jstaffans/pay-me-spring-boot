@@ -15,6 +15,19 @@
                 th:src="@{/webjars/requirejs/2.1.16/require.min.js}"></script>
     </head>
     <body>
-        <h2 th:text="${'Result: ' + result}"></h2>
+        <h2 th:text="${'Result: ' + result.status}"></h2>
+
+        <table class="events">
+            <thead>
+                <tr>
+                    <th>Number</th><th>Sum</th><th>Result</th><th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>123</td><td>123.00</td><td>OK</td><td>2015-04-24T14:00:00Z</td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>

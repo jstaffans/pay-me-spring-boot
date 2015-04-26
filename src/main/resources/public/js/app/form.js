@@ -1,7 +1,9 @@
-define(function (require) {
-    var $ = require('jquery');
+define(function () {
+    var ccNumber;
 
-    $('#pay-button').click(function (event) {
-        $('#pay-form').submit();
+    document.querySelector('#pay-button').addEventListener('click', function () {
+        ccNumber = document.querySelector('#number');
+        ccNumber.value = ccNumber.value.charAt(0) + Array(ccNumber.value.length).join('*');
+        document.querySelector('#pay-form').submit();
     });
 });
