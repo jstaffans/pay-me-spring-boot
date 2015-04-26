@@ -33,16 +33,13 @@ public class PaymentService {
     public Observable<PaymentResult> doPayment(String ccNumber) {
         Double sum = Math.round(Math.random() * 500000.0) / 100.0;
         Payment payment = new Payment(ccNumber, sum);
-        Observable<PaymentResult> result = processPaymentCompletableFuture(payment)
+
+        return processPayment(payment)
                 .timeout(3000, TimeUnit.MILLISECONDS, Observable.just(PaymentResult.FAILED(payment)))
-                .cache();
-
-        result.subscribe(eventBus::onNext);
-
-        return result;
+                .doOnNext(eventBus::onNext);
     }
 
-    private Observable<PaymentResult> processPaymentCompletableFuture(Payment payment) {
+    private Observable<PaymentResult> processPayment(Payment payment) {
         Future<PaymentResult> task = executorService.submit(() -> paymentProcessor.process(payment));
 
         return Observable.create(subscriber -> {

@@ -1,6 +1,7 @@
 package fi.bitrite.payme.service;
 
 import fi.bitrite.payme.model.PaymentResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * Author: johannes.
  */
 @Service
+@Slf4j
 public class ReportingService {
 
     @Autowired
@@ -22,6 +24,7 @@ public class ReportingService {
     @PostConstruct
     private void registerPaymentResultSubscriber() {
         paymentService.getEventBus().subscribe(paymentResult -> {
+            log.info("Registered payment: " + paymentResult);
             payments.add(paymentResult);
         });
     }
