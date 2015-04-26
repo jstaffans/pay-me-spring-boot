@@ -10,10 +10,7 @@
     appDir: '../resources/public',
     baseUrl: 'js',
     paths: {
-        app: 'app',
-
-        // ignore libraries that are fetched from webjars
-        jquery: 'empty:'
+        app: 'app'
     },
 
     dir: '../../../target/classes/public',
