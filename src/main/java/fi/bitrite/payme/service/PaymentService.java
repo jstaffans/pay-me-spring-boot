@@ -34,7 +34,7 @@ public class PaymentService {
         Double sum = Math.round(Math.random() * 500000.0) / 100.0;
         Payment payment = new Payment(ccNumber, sum);
         Observable<PaymentResult> result = processPaymentCompletableFuture(payment)
-                .timeout(3000, TimeUnit.SECONDS, Observable.just(PaymentResult.FAILED(payment)))
+                .timeout(3000, TimeUnit.MILLISECONDS, Observable.just(PaymentResult.FAILED(payment)))
                 .cache();
 
         result.subscribe(eventBus::onNext);
