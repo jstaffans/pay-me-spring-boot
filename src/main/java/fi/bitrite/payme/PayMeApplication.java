@@ -1,6 +1,7 @@
 package fi.bitrite.payme;
 
 import com.darrinholst.sass_java.SassCompilingFilter;
+import net.matlux.NreplServerSpring;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -28,6 +29,11 @@ public class PayMeApplication {
         filterBean.addUrlPatterns("*.css");
         filterBean.setInitParameters(initParams);
         return filterBean;
+    }
+
+    @Bean
+    public NreplServerSpring repl() {
+        return new NreplServerSpring(1112);
     }
 
 }

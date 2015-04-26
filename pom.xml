@@ -73,6 +73,22 @@
             <artifactId>jvm-breakglass</artifactId>
             <version>0.0.8</version>
         </dependency>
+        <dependency>
+            <groupId>im.chit</groupId>
+            <artifactId>vinyasa</artifactId>
+            <version>0.3.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.3</version>
+        </dependency>
     </dependencies>
 
 	<build>
