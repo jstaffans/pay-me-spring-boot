@@ -20,6 +20,12 @@ public class PayMeApplication {
 
     @Bean
     @Profile("dev")
+    public NreplServerSpring repl() {
+        return new NreplServerSpring(1112);
+    }
+
+    @Bean
+    @Profile("dev")
     public FilterRegistrationBean sassFilter() {
         FilterRegistrationBean filterBean = new FilterRegistrationBean();
         Map<String, String> initParams = new HashMap<>();
@@ -30,9 +36,4 @@ public class PayMeApplication {
         return filterBean;
     }
 
-    @Bean
-    @Profile("dev")
-    public NreplServerSpring repl() {
-        return new NreplServerSpring(1112);
-    }
 }

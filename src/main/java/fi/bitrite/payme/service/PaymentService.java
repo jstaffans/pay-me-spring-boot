@@ -3,6 +3,7 @@ package fi.bitrite.payme.service;
 import fi.bitrite.payme.model.Payment;
 import fi.bitrite.payme.model.PaymentResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rx.Observable;
@@ -17,12 +18,12 @@ import java.util.concurrent.*;
 @Slf4j
 public class PaymentService {
 
-    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    // a cached executor service with max 5 threads
+    ExecutorService executorService = new ThreadPoolExecutor(5, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
     private final Subject<PaymentResult, PaymentResult> eventBus = new SerializedSubject<>(PublishSubject.create());
 
     PaymentProcessor paymentProcessor = (payment) -> {
-        Thread.sleep(Math.round(Math.random() * 5000.0));
         log.info("Charging: {}", payment);
         return PaymentResult.OK(payment);
     };
@@ -31,11 +32,12 @@ public class PaymentService {
     private ReportingService reportingService;
 
     public Observable<PaymentResult> doPayment(String ccNumber) {
-        Double sum = Math.round(Math.random() * 500000.0) / 100.0;
+        NormalDistribution priceDistribution = new NormalDistribution(1000.0, 200.0);
+        Double sum = priceDistribution.sample();
         Payment payment = new Payment(ccNumber, sum);
 
         return processPayment(payment)
-                .timeout(3000, TimeUnit.MILLISECONDS, Observable.just(PaymentResult.FAILED(payment)))
+                .timeout(10000, TimeUnit.MILLISECONDS, Observable.just(PaymentResult.FAILED(payment)))
                 .doOnNext(eventBus::onNext);
     }
 
